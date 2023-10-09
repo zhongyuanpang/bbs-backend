@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pzy.mapper.BlogMapper">
+    <resultMap type="com.pzy.entity.Blog" id="Blog">
+        <id     property="blogId"     column="blog_id"     />
+        <result property="title"   column="title"   />
+        <result property="content"  column="content"   />
+        <result property="createTime"   column="create_time"   />
+        <result property="updateTime"   column="update_time"   />
+        <result property="views"     column="views"      />
+        <result property="clickLike"      column="click_like"       />
+        <result property="description"      column="description"       />
+        <result property="published"     column="published"      />
+        <result property="flag"    column="flag"    />
+        <result property="typeId" column="type_id" />
+        <result property="userId"   column="user_id"   />
+        <result property="tags"   column="tags"   />
+        <result property="status"   column="status"   />
+        <result property="cover" column="cover" />
+        <result property="delFlag" column="del_flag" />
+        <collection property="user" ofType="list" resultMap="User"></collection>
+    </resultMap>
+
+    <resultMap id="User" type="com.pzy.entity.User">
+        <id     property="userId"     column="user_id"     />
+        <result property="username"   column="username"   />
+        <result property="password"  column="password"   />
+        <result property="avatar"   column="avatar"   />
+        <result property="nickname"   column="nickname"   />
+        <result property="createTime"     column="create_time"      />
+        <result property="updateTime"      column="update_time"       />
+        <result property="sex"      column="sex"       />
+        <result property="phone"     column="phone"      />
+        <result property="signature"    column="signature"    />
+        <result property="email" column="email" />
+        <result property="status"   column="status"   />
+        <result property="delFlag" column="del_flag" />
+        <result property="background" column="background" />
+    </resultMap>
+
+    <sql id="BlogResult">
+        select b.blog_id,b.title,b.content,b.create_time,
+               b.update_time,b.views,b.click_like,b.description,
+               b.published,b.flag,b.type_id,b.user_id,b.tags,b.status,b.cover,
+               u.user_id,u.username,u.nickname,u.avatar
+        from blog b
+            left join user u on b.user_id = u.user_id
+    </sql>
+
+    <!--  网站主页展示博客列表  -->
+    <select id="ShowHomeBlogList" resultMap="Blog">
+        <include refid="BlogResult"/>
+        where b.published = 0
+        order by b.create_time desc
+    </select>
+
+    <!--  根据博客id获取对应信息  -->
+    <select id="getBlogById" resultMap="Blog">
+        <include refid="BlogResult"/>
+        WHERE b.blog_id = #{ blogId }
+    </select>
+
+
+
+</mapper>

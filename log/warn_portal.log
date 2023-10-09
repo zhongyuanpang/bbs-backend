@@ -1,0 +1,3 @@
+00:11:22.398 [restartedMain] WARN  c.b.m.core.metadata.TableInfoHelper - Can not find table primary key in Class: "com.pzy.entity.SysRoleMenu".
+00:11:22.461 [restartedMain] WARN  c.b.m.core.metadata.TableInfoHelper - Can not find table primary key in Class: "com.pzy.entity.SysUserRole".
+00:11:22.579 [restartedMain] WARN  c.b.m.core.metadata.TableInfoHelper - Can not find table primary key in Class: "com.pzy.entity.User".

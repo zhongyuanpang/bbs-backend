@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pzy.mapper.SysRoleMapper">
+    <resultMap id="SysRoles" type="com.pzy.entity.SysRole">
+        <id column="role_id" jdbcType="INTEGER" property="roleId"></id>
+        <result column="role_name" jdbcType="INTEGER" property="roleName"></result>
+        <result column="role_code" jdbcType="INTEGER" property="roleCode"></result>
+        <result column="role_sort" jdbcType="INTEGER" property="roleSort"></result>
+        <result column="status" jdbcType="INTEGER" property="status"></result>
+        <result column="del_flag" jdbcType="INTEGER" property="delFlag"></result>
+        <result column="create_by" jdbcType="INTEGER" property="createBy"></result>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"></result>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"></result>
+        <result column="remark" jdbcType="INTEGER" property="remark"></result>
+        <result column="menu_check_strictly" jdbcType="INTEGER" property="menuCheckStrictly"></result>
+    </resultMap>
+
+    <sql id="selectRole">
+        select distinct r.role_id, r.role_name, r.role_Code, r.role_sort, r.menu_check_strictly,
+                        r.status, r.del_flag, r.create_time,r.update_time, r.remark
+        from sys_role r
+                 left join sys_user_role ur on ur.role_id = r.role_id
+                 left join sys_user u on u.user_id = ur.user_id
+    </sql>
+
+    <!--  根据userId 查找对应的角色id  -->
+    <select id="selectRoleListByUserId" parameterType="Long" resultType="Long">
+        select r.role_id
+        from sys_role r
+                 left join sys_user_role ur on ur.role_id = r.role_id
+                 left join sys_user u on u.user_id = ur.user_id
+        where u.user_id = #{userId}
+    </select>
+
+    <!--  根据Id查找角色  -->
+    <select id="selectRoleById" resultMap="SysRoles">
+        <include refid="selectRole"/>
+        where r.role_id = #{roleId}
+    </select>
+
+    <!--  检验角色名称唯一性  -->
+    <select id="checkRoleNameUnique" parameterType="String" resultMap="SysRoles">
+        <include refid="selectRole"/>
+        where r.role_name=#{roleName} limit 1
+    </select>
+
+    <!--  查询角色Code唯一性  -->
+    <select id="checkRoleCodeUnique" parameterType="String" resultMap="SysRoles">
+        <include refid="selectRole"/>
+        where r.role_code=#{roleCode} limit 1
+    </select>
+
+    <!--  根据ID查询对应角色  -->
+    <select id="selectRolePermissionByUserId" resultMap="SysRoles">
+        <include refid="selectRole"/>
+        WHERE r.del_flag = '0' and ur.user_id = #{userId}
+    </select>
+
+    <select id="selectRoleAll" resultMap="SysRoles">
+        <include refid="selectRole"/>
+    </select>
+
+    <!--  表单过滤查询  -->
+    <select id="selectRoleList" resultMap="SysRoles">
+        <include refid="selectRole"/>
+        where r.del_flag = '0'
+        <if test="role.roleId != null and role.roleId != 0">
+            AND  r.role_id = #{roleId}
+        </if>
+        <if test="role.roleName != null and role.roleName != ''">
+            AND r.role_name like concat('%', #{role.roleName}, '%')
+        </if>
+        <if test="role.status != null and role.status != ''">
+            AND r.status = #{role.status}
+        </if>
+        <if test="role.roleCode != null and role.roleCode != ''">
+            AND r.role_code like concat('%', #{role.roleCode}, '%')
+        </if>
+        <!-- 数据范围过滤 -->
+        order by r.role_sort
+    </select>
+
+    <!--  添加一个角色信息  -->
+    <insert id="insertRole" parameterType="String" useGeneratedKeys="true" keyProperty="roleId">
+        insert into sys_role(
+        <if test="roleId != null and roleId != 0">role_id,</if>
+        <if test="roleName != null and roleName != ''">role_name,</if>
+        <if test="roleCode != null and roleCode != ''">role_code,</if>
+        <if test="roleSort != null and roleSort != ''">role_sort,</if>
+        <if test="menuCheckStrictly != null">menu_check_strictly,</if>
+        <if test="status != null and status != ''">status,</if>
+        <if test="createBy != null and createBy != ''">create_by,</if>
+        <if test="remark != null and remark != ''">remark,</if>
+        create_time
+        )values(
+        <if test="roleId != null and roleId != 0">#{roleId},</if>
+        <if test="roleName != null and roleName != ''">#{roleName},</if>
+        <if test="roleCode != null and roleCode != ''">#{roleCode},</if>
+        <if test="roleSort != null and roleSort != ''">#{roleSort},</if>
+        <if test="menuCheckStrictly != null">#{menuCheckStrictly},</if>
+        <if test="status != null and status != ''">#{status},</if>
+        <if test="createBy != null and createBy != ''">#{createBy},</if>
+        <if test="remark != null and remark != ''">#{remark},</if>
+        sysdate()
+        )
+    </insert>
+
+    <!--  修改角色信息  -->
+    <update id="updateRole" parameterType="String">
+        update sys_role
+        <set>
+            <if test="roleName != null and roleName != ''">role_name = #{roleName},</if>
+            <if test="roleCode != null and roleCode != ''">role_code = #{roleCode},</if>
+            <if test="roleSort != null and roleSort != ''">role_sort = #{roleSort},</if>
+            <if test="menuCheckStrictly != null">menu_check_strictly = #{menuCheckStrictly},</if>
+            <if test="status != null and status != ''">`status` = #{status},</if>
+            <if test="createBy != null and createBy != ''">`create_by` = #{createBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </set>
+        where role_id = #{roleId}
+    </update>
+</mapper>

@@ -1,0 +1,7 @@
+18:29:09.292 [restartedMain] WARN  c.b.m.core.metadata.TableInfoHelper - Can not find table primary key in Class: "com.pzy.entity.SysRoleMenu".
+18:29:09.371 [restartedMain] WARN  c.b.m.core.metadata.TableInfoHelper - Can not find table primary key in Class: "com.pzy.entity.SysUserRole".
+18:29:09.492 [restartedMain] WARN  c.b.m.core.metadata.TableInfoHelper - Can not find table primary key in Class: "com.pzy.entity.User".
+19:19:35.613 [restartedMain] WARN  c.b.m.core.metadata.TableInfoHelper - Can not find table primary key in Class: "com.pzy.entity.SysRoleMenu".
+19:19:35.676 [restartedMain] WARN  c.b.m.core.metadata.TableInfoHelper - Can not find table primary key in Class: "com.pzy.entity.SysUserRole".
+19:19:35.820 [restartedMain] WARN  c.b.m.core.metadata.TableInfoHelper - Can not find table primary key in Class: "com.pzy.entity.User".
+20:30:21.997 [http-nio-8089-exec-3] ERROR c.alibaba.druid.pool.DruidDataSource - testWhileIdle is true, validationQuery not set
